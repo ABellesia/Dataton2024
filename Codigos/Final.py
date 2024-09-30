@@ -139,3 +139,30 @@ localidades_seleccionadas[['nombre_localidad', 'latitud', 'longitud', 'farmacia_
 
 print("Se han seleccionado 200 localidades para la expansión de farmacias.")
 print(localidades_seleccionadas)
+
+
+
+#PARA IMPRIMIR EL MAPA
+ # pip install --user folium
+
+import folium
+import pandas as pd
+
+# Cargar los datos de las 200 farmacias seleccionadas
+localidades_seleccionadas = pd.read_csv('localidades_expansion_max_ingreso.csv')  # Asegúrate de que tenga las columnas: 'nombre_localidad', 'latitud', 'longitud', 'farmacia_asignada'
+
+# Crear un mapa centrado en México (ajusta las coordenadas según tus necesidades)
+mapa = folium.Map(location=[23.6345, -102.5528], zoom_start=5)
+
+# Añadir marcadores para cada farmacia seleccionada
+for idx, row in localidades_seleccionadas.iterrows():
+    folium.Marker(
+        location=[row['latitud'], row['longitud']],
+        popup=f"{row['farmacia_asignada']} en {row['nombre_localidad']}",
+        icon=folium.Icon(color="blue", icon="plus-sign")
+    ).add_to(mapa)
+
+# Guardar el mapa en un archivo HTML
+mapa.save("mapa_farmacias.html")
+
+print("Mapa generado y guardado como 'mapa_farmacias.html'")
